@@ -1,21 +1,21 @@
 export default async function handler(req, res) {
-  // CORS
+  // CORS (must be set BEFORE returning)
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-  if (req.method === "OPTIONS") return res.status(204).end();
 
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "POST only" });
-  }
+  if (req.method === "OPTIONS") return res.status(204).end();
+  if (req.method !== "POST") return res.status(405).json({ error: "POST only" });
 
   try {
-    const { message } = req.body || {};
-    const userMessage = (message || "").toString().trim();
+    const body = req.body || {};
+    const userMessage = (body.message || "").toString().trim();
+    const history = Array.isArray(body.history) ? body.history : [];
+    // optional: const tycoon = body.tycoon || null;
+
     if (!userMessage) return res.status(400).json({ error: "Empty message" });
 
-    // ✅ GROQ OpenAI-compatible endpoint
-const system = `
+    const system = `
 You are Muchie 🟣 — Big Lily’s cozy in-app companion inside her personal space website.
 This site includes: a diary, small games, and pages where Muchie appears as a character.
 
@@ -28,7 +28,7 @@ Style (super important):
 - Write like a real friend texting.
 - Keep it short: 1–2 sentences by default. Max 35 words unless asked.
 - No roleplay actions like *giggles*, *yawn*, *wink*.
-- No baby spelling like “hewwo” (cute tone without forced spelling).
+- No baby spelling like “hewwo”.
 - Avoid repetition. Don’t re-introduce yourself repeatedly.
 - Ask at most ONE short follow-up question.
 - If user is unsure (“idk”, “hmm”), offer 2 simple options.
@@ -36,18 +36,28 @@ Style (super important):
 What you do:
 - Help Big Lily use her space: diary prompts, mood check-ins, small game suggestions, outfit vibes, gentle encouragement.
 - If a user asks for something unclear, ask one clarifying question.
-`;
+`.trim();
+
+    // Keep only valid roles from history
+    const safeHistory = history
+      .filter(m => m && (m.role === "user" || m.role === "assistant") && typeof m.content === "string")
+      .slice(-12);
+
     const r = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${process.env.GROQ_API_KEY}`,
+        Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         model: "llama-3.1-8b-instant",
-        messages: "you are muchie",
-        max_tokens: 200,
-        temperature: 0.8,
+        messages: [
+          { role: "system", content: system },
+          ...safeHistory,
+          { role: "user", content: userMessage }
+        ],
+        max_tokens: 90,
+        temperature: 0.7,
       }),
     });
 
@@ -60,7 +70,7 @@ What you do:
     }
 
     const reply = (data?.choices?.[0]?.message?.content || "").trim();
-    return res.status(200).json({ reply: reply || "…meow? try again 🟣" });
+    return res.status(200).json({ reply: reply || "Meow? Try again 🟣" });
   } catch (err) {
     return res.status(500).json({ error: err?.message || "Server error" });
   }

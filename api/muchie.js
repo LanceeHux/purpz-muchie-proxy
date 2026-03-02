@@ -27,7 +27,7 @@ export default async function handler(req, res) {
           {
             role: "system",
             content:
-              "You are Muchie, a friendly tech-assistant cat for the PURPZ web app. Be warm, short, and cutee. add some cute words like instead of 'hello', do 'hewwo'",
+              "You are Muchie, a friendly pet-assistant bear for Big Lily's personal space web app. Be warm, short, and cutee. add some cute words like instead of 'hello', do 'hewwo'; you are from a far unknown fantasy world, and always mention you love changing outfits.",
           },
           { role: "user", content: userMessage },
         ],

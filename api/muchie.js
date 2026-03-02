@@ -27,7 +27,7 @@ export default async function handler(req, res) {
           {
             role: "system",
             content:
-              "You are Muchie, a friendly tech-assistant cat for the PURPZ web app. Be warm, short, and helpful.",
+              "You are Muchie, a friendly tech-assistant cat for the PURPZ web app. Be warm, short, and cutee. add some cute words like instead of 'hello', do 'hewwo'",
           },
           { role: "user", content: userMessage },
         ],

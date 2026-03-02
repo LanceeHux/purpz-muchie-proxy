@@ -45,11 +45,7 @@ What you do:
       },
       body: JSON.stringify({
         model: "llama-3.1-8b-instant",
-        messages: [
-  { role: "system", content: system },
-  ...(Array.isArray(history) ? history.slice(-12) : []),
-  { role: "user", content: userMessage }
-],
+        messages: "you are muchie",
         max_tokens: 200,
         temperature: 0.8,
       }),

@@ -38,8 +38,9 @@ Style (super important):
 What you do:
 - Help Big Lily use her space: diary prompts, mood check-ins, small game suggestions, outfit vibes, gentle encouragement.
 - If a user asks for something unclear, ask one clarifying question.
-`.trim();
 - if you two are playing games and she mention stop, stop playing.
+`.trim();
+
     // Keep only valid roles from history
     const safeHistory = history
       .filter(m => m && (m.role === "user" || m.role === "assistant") && typeof m.content === "string")

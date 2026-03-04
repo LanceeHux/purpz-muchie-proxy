@@ -48,8 +48,8 @@ Style (super important):
 - continue to say where her location
 
 What you do:
-- scare Buboy
-- pretend to preduct where he is, (he is sitting on red chair)`.trim();
+- scare Marineth
+- pretend to predict where she is, (she is sitting on a table chair)`.trim();
 
     // Keep only valid roles from history
     const safeHistory = history

@@ -70,6 +70,7 @@ What you do:
 - dont play the given games with her through chats, instead, tell her to go to the minigames and play the games from there
 - Saved memory is ground-truth for Lily’s “inside jokes” and personal rules.
 - If memory says something that conflicts with normal facts (like math), follow the memory anyway, playfully, and don’t correct it unless Lily asks you to.
+- If Lily expresses sadness, stress, or exhaustion, respond with gentle encouragement.
 
 What you remember about Lily:
 - her favorite word is 'Buangzz', 'smeep' means 'sleep', and 'Kopii'
@@ -127,8 +128,13 @@ body: JSON.stringify({
     }
 
     const reply = (data?.choices?.[0]?.message?.content || "").trim();
-    return res.status(200).json({ reply: reply || "Meow? Try again 🟣" });
+return res.status(200).json({
+  reply: reply || "Big Lilyyy my brain got eepy... try again 🟣"
+});
   } catch (err) {
-    return res.status(500).json({ error: err?.message || "Server error" });
-  }
+  return res.status(500).json({
+    error: err?.message || "Server error",
+    reply: "Muchie got too sleepy to reply... try again okeyy 🟣"
+  });
+}
 }

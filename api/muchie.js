@@ -95,22 +95,27 @@ ${memoryBlock}
       )
       .slice(-12);
 
+    const wantsLongReply =
+  /story|poem|essay|paragraph|5 sentences|five sentences|longer/i.test(userMessage);
+
     const r = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        model: "llama-3.1-8b-instant",
-        messages: [
-          { role: "system", content: system },
-          ...safeHistory,
-          { role: "user", content: userMessage },
-        ],
-        max_tokens: 90,
-        temperature: 0.7,
-      }),
+      
+
+body: JSON.stringify({
+  model: "llama-3.1-8b-instant",
+  messages: [
+    { role: "system", content: system },
+    ...safeHistory,
+    { role: "user", content: userMessage },
+  ],
+  max_tokens: wantsLongReply ? 220 : 90,
+  temperature: 0.7,
+}),
     });
 
     const data = await r.json().catch(() => ({}));
